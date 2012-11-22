@@ -1,0 +1,5 @@
+lda	Fit an LDA model to the cora dataset and visualize document-topic memberships.
+slda	Fit an sLDA model to the poliblog dataset and visualize the relationship between topics and political bent.
+mmsb	Fit an MMSB model to the sampson data and visualize the block interactions and the position of each actor in the latent space.
+rtm	Fit an RTM model and compare predictive link accuracy to the LDA model.
+nubbi	Fit a NUBBI model to New York Times data and visualize relationships between entities.
