@@ -5,7 +5,7 @@ function (documents, K, vocab, num.iterations, alpha, eta, annotations,
 {
     retval <- structure(.Call("collapsedGibbsSampler", documents, 
         as.integer(K), as.integer(length(vocab)), as.integer(num.iterations), 
-        as.double(alpha), as.double(eta), if (!logistic) as.double(annotations) else as.logical(annotations), 
+        as.double(alpha), as.double(eta),if (!logistic) as.double(annotations) else if (method=="sLDA" & logistic) as.integer(annotations) else as.logical(annotations), 
         as.double(beta), as.double(variance), pmatch(method, 
             c("sLDA", "corrLDA", "prodLDA")), as.double(lambda), 
         NULL, NULL, initial, burnin, FALSE, trace, FALSE), names = c("assignments", 
@@ -13,6 +13,7 @@ function (documents, K, vocab, num.iterations, alpha, eta, annotations,
     colnames(retval$topics) <- vocab
     retval
 }
+
 .model.filenames <-
 function (data.dir, by.time = TRUE, files = c("elbo", "beta", 
     "phi")) 

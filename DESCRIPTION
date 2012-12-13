@@ -16,3 +16,4 @@ Description: This package implements latent Dirichlet allocation (LDA)
 License: LGPL
 LazyLoad: yes
 Suggests: Matrix, reshape2, ggplot2 (>= 0.9.1), penalized
+Depends : nnet
