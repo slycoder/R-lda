@@ -39,7 +39,7 @@ predictions <- slda.predict(newsgroup.test.documents[classesInTest],
                             alpha = 1.0,
                             eta=0.1)
 
-predProbs<-exp(cbind(0,predictions))
+predProbs<-cbind(0,predictions)
 predInd<-t(apply(predProbs,1,which.max))
 cat("Individual classification accuracy with the first", num.classes,"classes of newsgroup data set with 10 e, 4 m steps,",num.topics, "topics\n", sum(predInd==newsgroup.test.labels[classesInTest])/length(classesInTest),"\n")
 cat("Confusion matrix:\n")
