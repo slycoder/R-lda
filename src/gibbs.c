@@ -1017,12 +1017,14 @@ SEXP collapsedGibbsSampler(SEXP documents,
 	  p_sum += p[kk];
 	}
 
-	if (p_sum <= 0.0 || !R_finite(sumcn)) {
+	if (p_sum < 0.0) {
 	  kk = K - 1;
 	  error("Numerical problems (%g, %g, %g).", dv[dd],
 		dv_update(annotations, dd, REAL(beta)[kk],
 			  var, nw, method, logistic), sumcn);
-	}
+	} else if (p_sum==0) for (kk = 0; kk < K; ++kk) p[kk]=1.0/K;
+	
+	
 
 	*z = -1;
 	for (kk = 0; kk < K; ++kk) {
