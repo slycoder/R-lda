@@ -522,38 +522,53 @@ SEXP collapsedGibbsSampler(SEXP documents,
   int N = INTEGER(N_)[0];
 
   int method = -1;
-
+	
   CHECK(documents, NewList);
   int nd = length(documents);
 
   double* dv = NULL;
   double* wx2 = NULL;
   double* wx = NULL;
-
-  if (!isNull(annotations)) {
+  
+  
+  int classN; //number of classes in sLDA minus 1
+  
+ if (!isNull(annotations)) {
     if (length(annotations) != nd) {
       error("annotations must have same length as documents.");
     }
-    if (isReal(annotations)) {
-      logistic = 0;
-    } else if (isLogical(annotations)) {
+    if (isInteger(annotations)) {
       logistic = 1;
+    }
+    else if (isLogical(annotations)){
+      logistic = 1;
+      if (method==sLDA) error("annotations must be integers when method is SLDA.");
+      CHECKLEN(beta, Real, K);
+    }
+    else if (isReal(annotations)) {
+      logistic = 0; 
+      CHECKLEN(beta, Real, K);
     } else {
-      error("annotations must be real or logical.");
+      error("annotations must be real, logical or integer.");
     }
 
     CHECKLEN(var_, Real, 1);
     var = REAL(var_)[0];
-
-    CHECKLEN(beta, Real, K);
-
-    CHECKLEN(method_, Integer, 1);
+	
+	CHECKLEN(method_, Integer, 1);
     method = INTEGER(method_)[0];
-    if (method < 1 || method > 3) {
+     if (method < 1 || method > 3) {
       error("method must be between 1 and 3.");
     }
-
-    dv = (double *)R_alloc(nd, sizeof(double));
+	if (method==sLDA && logistic){
+		  if (length(beta) % K != 0) {
+			  error("params length must be an integer multiple of number of topics when SLDA and logistic options are used");
+		  }
+		  classN = length(beta)/K;
+	}
+	
+    if (logistic && method==sLDA) dv = (double *)R_alloc(nd * classN, sizeof(double));
+    else dv = (double *)R_alloc(nd, sizeof(double));
     if (method == prodLDA) {
       wx = (double *)R_alloc(K, sizeof(double));
       wx2 = (double *)R_alloc(K, sizeof(double));
@@ -699,12 +714,17 @@ SEXP collapsedGibbsSampler(SEXP documents,
 
     CHECKMATROW(document, Integer, 2);
 
-    if (!isNull(annotations)) {
-      if (method == corrLDA || logistic) {
-	dv[dd] = 0.0;
-      } else {
-	dv[dd] = REAL(annotations)[dd];
-      }
+	if (!isNull(annotations)) {
+		if (method== sLDA && logistic) {
+			for (ww=0; ww< classN; ww++){
+				dv[dd + nd * ww] = 0.0;
+			}
+		}
+    	else  if (method == corrLDA || logistic) {
+				dv[dd] = 0.0;
+		  	  } else {
+				dv[dd] = REAL(annotations)[dd];
+		  	  }
     }
 
     int nw = INTEGER(GET_DIM(document))[1];
@@ -760,6 +780,11 @@ SEXP collapsedGibbsSampler(SEXP documents,
       SEXP document = VECTOR_ELT(documents, dd);
       int ww;
       int nw = INTEGER(GET_DIM(document))[1];
+      int nws=0; //Use sum of count of words in dv_update instead of number of unique words
+      			//This was only applied to sLDA & logical case in order to not cause any changes to the rest      
+      for (ww=0; ww<nw;ww++){
+      	nws+= INTEGER(document)[ww * 2 + 1];
+      }
       SEXP initial_d = NULL;
 
       if (initial != NULL) {
@@ -892,12 +917,19 @@ SEXP collapsedGibbsSampler(SEXP documents,
 	  }
 	  document_k = &INTEGER(document_sums)[K * dd + *z];
 	  *document_k -= count;
-
+	  
 	  if (!isNull(annotations)) {
 	    if (method == prodLDA) {
 	      wx2[*z] -= count * REAL(annotations)[dd] * REAL(annotations)[dd];
 	      wx[*z] -= count * REAL(annotations)[dd];
-	    } else {
+	    } else if(method==sLDA && logistic) {
+	    	int cn;
+	    	for (cn=0; cn<classN;cn++){
+	    	  	dv[dd+cn*nd] += count * dv_update(annotations, dd, REAL(beta)[*z + cn*K],
+					  var, nws, method, logistic);
+			}
+	    }
+	    else { 
 	      dv[dd] += count * dv_update(annotations, dd, REAL(beta)[*z],
 					  var, nw, method, logistic);
 	    }
@@ -911,58 +943,96 @@ SEXP collapsedGibbsSampler(SEXP documents,
 
 	double r = unif_rand();
 	double p_sum = 0.0;
+	
+	double sumcn;
 	for (kk = 0; kk < K; ++kk) {
 	  if (*z == -1) {
 	    if (initial != NULL) {
 	      if (INTEGER(initial_d)[ww] == kk) {
 		p[kk] = 1;
 	      } else {
+	       
 		p[kk] = 0;
 	      }
 	    } else {
 	      p[kk] = 1;
 	    }
 	  } else {
+	  
 	    p[kk] = (INTEGER(document_sums)[K * dd + kk] + alpha);
 	    p[kk] *= (INTEGER(topics)[kk + K * word] + eta);
 	    p[kk] /= (INTEGER(topic_sums)[kk + K * topic_index] + V * eta);
-
+	   
 	    if (!isNull(annotations)) {
 	      if (method == corrLDA) {
-		p[kk] *= dv_update(annotations, dd, REAL(beta)[kk],
-				   var, nw, method, logistic) - dv[dd];
-	      } else if (method == sLDA) {
-		double change = REAL(beta)[kk] / nw;
-		if (logistic) {
-		  double yv = 2 * LOGICAL(annotations)[dd] - 1.0;
-		  p[kk] /= 1.0 + exp(yv * (dv[dd] - change));
-		} else {
-      // How does this work?
-      // dv[dd] = y - sum_{i != n} beta_{z_i} / N
-      // change = beta_{z_n} / N
-      // What we want to compute i:
-      // exp(2 * change * (dv[dd]) - change^2)
-		  p[kk] *= exp(change * (dv[dd] - change / 2) / var);
-		}
-	      } else if (method == prodLDA) {
-		double x_d = REAL(annotations)[dd];
-		int n_k = INTEGER(topic_sums)[kk + K * topic_index] + 1 + lambda;
-		p[kk] *= sqrt(n_k) *
-		  exp(-(wx2[kk] - wx2[0] - (wx[kk] + x_d)*(wx[kk] + x_d)/n_k + (wx[0] + x_d) * (wx[0] + x_d) / n_k) / (2 * var));
+				p[kk] *= dv_update(annotations, dd, REAL(beta)[kk],var, nw, method, logistic) - dv[dd];
+		  } else if (method == sLDA) {
+				double change=0;
+				if (logistic) {
+					int cn;
+					sumcn=1.0;
+					for (cn=0; cn<classN; cn++){
+						change=REAL(beta)[kk + cn*K]/nws;
+						sumcn += exp(change - dv[dd+cn*nd]);
+					}
+					if (!R_finite(sumcn)){
+						double maxExp=0;
+						for (cn=0; cn<classN; cn++){
+							change=REAL(beta)[kk + cn*K]/nws;
+							if ((change - dv[dd+cn*nd])>maxExp) maxExp=(change - dv[dd+cn*nd]);
+						}
+						sumcn=exp(0-maxExp);
+						for (cn=0; cn<classN; cn++){
+							change=REAL(beta)[kk + cn*K]/nws;
+							sumcn += exp(change - dv[dd+cn*nd]-maxExp);
+						}
+						int yv = INTEGER(annotations)[dd]-1;
+						if (yv==-1) p[kk] *=exp(0-maxExp)/sumcn; 
+						else { 
+							change = REAL(beta)[kk + yv*K]/nws; 
+							p[kk] *= exp(change-dv[dd + yv*nd]-maxExp)/sumcn;	
+						}
+					} else{
+						int yv = INTEGER(annotations)[dd]-1;
+						if (yv==-1) p[kk] *=1.0/sumcn; 
+						else { 
+							change = REAL(beta)[kk + yv*K]/nws; 
+							p[kk] *= exp(change-dv[dd + yv*nd])/sumcn;	
+						}
+					}
+				} else { 
+				  // How does this work?
+      			  // dv[dd] = y - sum_{i != n} beta_{z_i} / N
+                  // change = beta_{z_n} / N
+                  // What we want to compute i:
+                  // exp(2 * change * (dv[dd]) - change^2)
+				  change = REAL(beta)[kk] / nw;
+				  p[kk] *= exp(change * (dv[dd] - change / 2) / var);
+				}
+		  } else if (method == prodLDA) {
+			double x_d = REAL(annotations)[dd];
+			int n_k = INTEGER(topic_sums)[kk + K * topic_index] + 1 + lambda;
+			p[kk] *= sqrt(n_k) *
+		 	 exp(-(wx2[kk] - wx2[0] - (wx[kk] + x_d)*(wx[kk] + x_d)/n_k + (wx[0] + x_d) * (wx[0] + x_d) / n_k) / (2 * var));
 	      } else {
-		error("Not implemented.");
+			error("Not implemented.");
 	      }
 	    }
 	  }
 	  p_sum += p[kk];
 	}
 
-	if (p_sum <= 0.0) {
+	if (p_sum < 0.0) {
 	  kk = K - 1;
-	  error("Numerical problems (%g, %g).", dv[dd],
+	  error("Numerical problems (%g, %g, %g).", dv[dd],
 		dv_update(annotations, dd, REAL(beta)[kk],
-			  var, nw, method, logistic));
+			  var, nw, method, logistic), sumcn);
+	} else if (p_sum==0) {
+		for (kk = 0; kk < K; ++kk) p[kk]=1.0/K;
+		printf("Warning:Sum of probabilities is zero, assigning equal probabilities.\n"); 
 	}
+	
+	
 
 	*z = -1;
 	for (kk = 0; kk < K; ++kk) {
@@ -994,11 +1064,17 @@ SEXP collapsedGibbsSampler(SEXP documents,
 	  if (method == prodLDA) {
 	    wx2[*z] += count * REAL(annotations)[dd] * REAL(annotations)[dd];
 	    wx[*z] += count * REAL(annotations)[dd];
+	  } else if (method==sLDA && logistic) {
+	  		int cn;
+	    	for (cn=0; cn<classN;cn++){
+	    	  	dv[dd+cn*nd] -= count * dv_update(annotations, dd, REAL(beta)[*z + cn*K],
+					  var, nws, method, logistic);
+			}
 	  } else {
 	    dv[dd] -= count * dv_update(annotations, dd, REAL(beta)[*z],
 					var, nw, method, logistic);
 	  }
-	}
+	}	
       }
     }
 
