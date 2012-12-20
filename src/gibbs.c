@@ -1001,6 +1001,11 @@ SEXP collapsedGibbsSampler(SEXP documents,
 						}
 					}
 				} else { 
+				  // How does this work?
+      			  // dv[dd] = y - sum_{i != n} beta_{z_i} / N
+                  // change = beta_{z_n} / N
+                  // What we want to compute i:
+                  // exp(2 * change * (dv[dd]) - change^2)
 				  change = REAL(beta)[kk] / nw;
 				  p[kk] *= exp(change * (dv[dd] - change / 2) / var);
 				}
@@ -1022,7 +1027,10 @@ SEXP collapsedGibbsSampler(SEXP documents,
 	  error("Numerical problems (%g, %g, %g).", dv[dd],
 		dv_update(annotations, dd, REAL(beta)[kk],
 			  var, nw, method, logistic), sumcn);
-	} else if (p_sum==0) for (kk = 0; kk < K; ++kk) p[kk]=1.0/K;
+	} else if (p_sum==0) {
+		for (kk = 0; kk < K; ++kk) p[kk]=1.0/K;
+		printf("Warning:Sum of probabilities is zero, assigning equal probabilities.\n"); 
+	}
 	
 	
 
