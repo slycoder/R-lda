@@ -886,7 +886,6 @@ SEXP collapsedGibbsSampler(SEXP documents,
       }
 
       for (ww = 0; ww < nw; ++ww) {
-<<<<<<< HEAD
         int* z = &INTEGER(zs)[ww];
         int word = -1;
         int count = 1;
@@ -1004,118 +1003,6 @@ SEXP collapsedGibbsSampler(SEXP documents,
                 } else {
                   // How does this work?
                   // dv[dd] = y - sum_{i != n} beta_{z_i} / N
-=======
-	int* z = &INTEGER(zs)[ww];
-	int word = -1;
-	int count = 1;
-	int* topic_wk;
-	int* topic_k;
-	int* document_k;
-
-	word = INTEGER(document)[ww * 2];
-	int partialsum = 0;
-	int topic_index = -1;
-	for (ii = 0; ii < length(V_); ++ii) {
-	  partialsum += INTEGER(V_)[ii];
-	  if (word < partialsum) {
-	    topic_index = ii;
-	  }
-	}
-	if (topic_index == -1) {
-	  error("Oops I did it again");
-	}
-	count = INTEGER(document)[ww * 2 + 1];
-
-	if (*z != -1) {
-	  topic_wk = &INTEGER(topics)[(*z) + K * word];
-	  topic_k = &INTEGER(topic_sums)[*z + K * topic_index];
-	  if(!freeze_topics)
-	  {
-	    *topic_wk -= count;
-	    *topic_k -= count;
-	  }
-	  document_k = &INTEGER(document_sums)[K * dd + *z];
-	  *document_k -= count;
-	  
-	  if (!isNull(annotations)) {
-	    if (method == prodLDA) {
-	      wx2[*z] -= count * REAL(annotations)[dd] * REAL(annotations)[dd];
-	      wx[*z] -= count * REAL(annotations)[dd];
-	    } else if(method==sLDA && logistic) {
-	    	int cn;
-	    	for (cn=0; cn<classN;cn++){
-	    	  	dv[dd+cn*nd] += count * dv_update(annotations, dd, REAL(beta)[*z + cn*K],
-					  var, nws, method, logistic);
-			}
-	    }
-	    else { 
-	      dv[dd] += count * dv_update(annotations, dd, REAL(beta)[*z],
-					  var, nw, method, logistic);
-	    }
-	  }
-
-	  if (*topic_wk < 0 || *topic_k < 0 || *document_k < 0) {
-	    error("Counts became negative for word (%d): (%d, %d, %d)",
-		  word, *topic_wk, *topic_k, *document_k);
-	  }
-	}
-
-	double r = unif_rand();
-	double p_sum = 0.0;
-	
-	double sumcn;
-	for (kk = 0; kk < K; ++kk) {
-	  if (*z == -1) {
-	    if (initial != NULL) {
-	      if (INTEGER(initial_d)[ww] == kk) {
-		p[kk] = 1;
-	      } else {
-	       
-		p[kk] = 0;
-	      }
-	    } else {
-	      p[kk] = 1;
-	    }
-	  } else {
-	  
-	    p[kk] = (INTEGER(document_sums)[K * dd + kk] + alpha);
-	    p[kk] *= (INTEGER(topics)[kk + K * word] + eta);
-	    p[kk] /= (INTEGER(topic_sums)[kk + K * topic_index] + V * eta);
-	   
-	    if (!isNull(annotations)) {
-	      if (method == corrLDA) {
-				p[kk] *= dv_update(annotations, dd, REAL(beta)[kk],var, nw, method, logistic) - dv[dd];
-		  } else if (method == sLDA) {
-				double change=0;
-				if (logistic) {
-					int cn;
-					sumcn=1.0;
-					for (cn=0; cn<classN; cn++){
-						change=REAL(beta)[kk + cn*K]/nws;
-						sumcn += exp(change - dv[dd+cn*nd]);
-					}
-					double maxExp=0;
-					if (!R_finite(sumcn)){
-						for (cn=0; cn<classN; cn++){
-							change=REAL(beta)[kk + cn*K]/nws;
-							if ((change - dv[dd+cn*nd])>maxExp) maxExp=(change - dv[dd+cn*nd]);
-						}
-						sumcn=exp(0-maxExp);
-						for (cn=0; cn<classN; cn++){
-							change=REAL(beta)[kk + cn*K]/nws;
-							sumcn += exp(change - dv[dd+cn*nd]-maxExp);
-						}
-					} 
-						int yv = INTEGER(annotations)[dd]-1;
-						if (yv==-1) p[kk] *=exp(0-maxExp)/sumcn; 
-						else { 
-							change = REAL(beta)[kk + yv*K]/nws; 
-							p[kk] *= exp(change-dv[dd + yv*nd]-maxExp)/sumcn;	
-						}
-				} else { 
-				  // How does this work?
-      			  // dv[dd] = y - sum_{i != n} beta_{z_i} / N
->>>>>>> Code simplification
                   // change = beta_{z_n} / N
                   // What we want to compute i:
                   // exp(2 * change * (dv[dd]) - change^2)
