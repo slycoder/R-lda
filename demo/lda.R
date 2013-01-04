@@ -33,7 +33,7 @@ topic.proportions.df <- melt(cbind(data.frame(topic.proportions),
                              variable.name="topic",
                              id.vars = "document")  
 
-qplot(topic, value, fill=document, ylab="proportion",
+qplot(variable, value, fill=document, ylab="proportion",
       data=topic.proportions.df, geom="bar") +
   opts(axis.text.x = theme_text(angle=90, hjust=1)) +  
   coord_flip() +
