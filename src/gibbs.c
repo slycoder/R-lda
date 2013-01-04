@@ -975,8 +975,8 @@ SEXP collapsedGibbsSampler(SEXP documents,
                     change=REAL(beta)[kk + cn*K]/nws;
                     sumcn += exp(change - dv[dd+cn*nd]);
                   }
+                  double maxExp=0;
                   if (!R_finite(sumcn)){
-                    double maxExp=0;
                     for (cn=0; cn<classN; cn++){
                       change=REAL(beta)[kk + cn*K]/nws;
                       if ((change - dv[dd+cn*nd])>maxExp) maxExp=(change - dv[dd+cn*nd]);
@@ -986,20 +986,13 @@ SEXP collapsedGibbsSampler(SEXP documents,
                       change=REAL(beta)[kk + cn*K]/nws;
                       sumcn += exp(change - dv[dd+cn*nd]-maxExp);
                     }
+                  } 
                     int yv = INTEGER(annotations)[dd]-1;
                     if (yv==-1) p[kk] *=exp(0-maxExp)/sumcn;
                     else {
                       change = REAL(beta)[kk + yv*K]/nws;
                       p[kk] *= exp(change-dv[dd + yv*nd]-maxExp)/sumcn;
-                    }
-                  } else{
-                    int yv = INTEGER(annotations)[dd]-1;
-                    if (yv==-1) p[kk] *=1.0/sumcn;
-                    else {
-                      change = REAL(beta)[kk + yv*K]/nws;
-                      p[kk] *= exp(change-dv[dd + yv*nd])/sumcn;
-                    }
-                  }
+                    }             
                 } else {
                   // How does this work?
                   // dv[dd] = y - sum_{i != n} beta_{z_i} / N
