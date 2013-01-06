@@ -16,7 +16,7 @@ rtm.collapsed.gibbs.sampler(documents, links, K, vocab, num.iterations,
 rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
         alpha, eta, lambda = sum(sapply(links, length))/(length(links) * (length(links) -1)/2),
   initial.beta = rep(3, K), trace = 0L,
-  test.start = length(documents) + 1L)
+  test.start = length(documents) + 1L, tempering = 0.0)
 }
 
 \arguments{
@@ -73,8 +73,14 @@ rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
     When \code{trace} is greater than zero, diagnostic messages will be
   output.  Larger values of \code{trace} imply more messages.
 }
-\item{test.start}{
-  Internal use only.
+  \item{test.start}{
+    Internal use only.
+  }
+  \item{tempering}{
+    A numeric between 0 and 1 indicating how newly computed parameters should
+    be averaged with the previous iterations parameters.  By default, the new
+    values are used directly and the old value discarded.  When set to 1, the
+    new values are ignored and the initial values retained indefinitely. 
   }
 }
 \details{
