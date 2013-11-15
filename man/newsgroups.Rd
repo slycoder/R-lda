@@ -1,7 +1,7 @@
 \name{newsgroups}
 \Rdversion{1.1}
-\alias{newsgroups}
-\alias{newsgroups.train.documents}
+\alias{newsgroup}
+\alias{newsgroup.train.documents}
 \alias{newsgroup.test.documents}
 \alias{newsgroup.train.labels}
 \alias{newsgroup.test.labels}

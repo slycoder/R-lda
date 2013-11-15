@@ -3,6 +3,7 @@
 \alias{lda.collapsed.gibbs.sampler}
 \alias{slda.em}
 \alias{mmsb.collapsed.gibbs.sampler}
+\alias{lda.cvb0}
 
 \title{
   Functions to Fit LDA-type models
@@ -27,6 +28,8 @@ regularise = FALSE, method = "sLDA", trace = 0L, MaxNWts=3000)
 
 mmsb.collapsed.gibbs.sampler(network, K, num.iterations, alpha,
 beta.prior, initial = NULL, burnin = NULL, trace = 0L)
+
+lda.cvb0(documents, K, vocab, num.iterations, alpha, eta, trace = 0L)
 }
 
 \arguments{
@@ -210,9 +213,13 @@ A fitted model as a list with the following components:
 
   \cite{Griffiths, Thomas L. and Steyvers, Mark.  Finding scientific
     topics.  Proceedings of the National Academy of Sciences, 2004.}
+
+  \cite{Asuncion, A., Welling, M., Smyth, P., and Teh, Y. W.  On
+  smoothing and inference for topic models.  Uncertainty in Artificial Intelligence,
+  2009.}
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})  
+  Jonathan Chang (\email{jonchang@fb.com})
 }
 \note{
   WARNING: This function does not compute precisely the correct thing
