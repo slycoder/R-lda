@@ -1,6 +1,7 @@
 data(sampson)
 set.seed(8675309)
 require("ggplot2")
+require("grid")
 theme_set(theme_bw())
 
 result <-
@@ -23,28 +24,27 @@ angles <- with(memberships, atan2(theta.3 - center[2], theta.1 - center[1]))
 angle.diffs <- tapply(angles, as.factor(angles), function(x) {
   pi/4 + seq(from=-(length(x) - 1) / 2,
              to=(length(x) - 1) / 2,
-             length.out=length(x)) * pi / 6    
+             length.out=length(x)) * pi / 6
 })
 angles[order(angles)] <- unlist(angle.diffs)
 
-plot.1 <- qplot(x = c(0, 0, 1),  y = c(0, 1, 0),
-                xend = c(0, 1, 0), yend = c(1, 0, 0),
-                main = "Latent positions",
-                xlab = expression(theta[1]),
-                ylab = expression(theta[3]),
-                geom="segment") + 
-  geom_point(aes(x=theta.1, y=theta.3, color = colors), 
-             data = memberships)  +
+plot.1 <- ggplot(data = memberships) +
+  geom_segment(aes(x = c(0, 0, 1),  y = c(0, 1, 0),
+                   xend = c(0, 1, 0), yend = c(1, 0, 0))) +
+  geom_point(aes(x = theta.1, y = theta.3, color = colors)) +
   scale_colour_manual(values = structure(memberships$colors, names = memberships$colors)) +
   scale_x_continuous(breaks=seq(0, 1, length.out=5),
                      limits = c(-0.25, 1.25)) +
   scale_y_continuous(breaks=seq(0, 1, length.out=5),
                      limits = c(-0.25, 1.25)) +
- geom_text(aes(x=theta.1, y=theta.3, label=name, colour = colors,
-               angle=angles * 180 / pi), 
+  geom_text(aes(x=theta.1, y=theta.3, label=name, colour = colors,
+                angle=angles * 180 / pi), 
             data = memberships,
             size=2, hjust=-0.5) +
-        opts(panel.grid.minor=theme_blank(), legend.position = "none")
+  ggtitle("Latent positions") +
+  xlab(expression(theta[1])) +
+  ylab(expression(theta[3])) +
+  theme(panel.grid.minor = element_blank(), legend.position = "none")
                    
   ## Block relations plot
 ratio <- with(result, blocks.pos / (blocks.pos + blocks.neg))
@@ -55,7 +55,7 @@ data <- as.data.frame(cbind(Probability=as.numeric(ratio),
                             Row=rep(1:3, times=3)))
 plot.2 <- qplot(Column, Row, main="Block relations",
                 size=Count, colour=Probability, data=data) +
-  scale_size(to=c(7,15)) +
+  scale_size(range=c(7,15)) +
   scale_x_continuous(breaks=1:3, limits=c(0.5, 3.5)) +
   scale_y_reverse(breaks=1:3, limits=c(3.5, 0.5))
 
