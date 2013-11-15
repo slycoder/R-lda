@@ -236,8 +236,6 @@ A fitted model as a list with the following components:
 
 \dontrun{demo(slda)}
 
-\dontrun{demo(sldamc)}
-
 \dontrun{demo(mmsb)}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

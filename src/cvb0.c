@@ -98,7 +98,7 @@ SEXP cvb0(
   int iteration;
   for (iteration = 0; iteration < N; ++iteration) {
     if (trace >= 1) {
-      Rprintf("Iteration %d\n", iteration);
+      REprintf("Iteration %d\n", iteration);
     }
     for (dd = 0; dd < nd; ++dd) {
       R_CheckUserInterrupt();
@@ -146,7 +146,7 @@ SEXP cvb0(
             p[kk] = 1.0;
           }
           p_sum = K;
-          printf("Warning:Sum of probabilities is zero, assigning equal probabilities.\n");
+          REprintf("Warning:Sum of probabilities is zero, assigning equal probabilities.\n");
         }
 
         for (kk = 0; kk < K; ++kk) {

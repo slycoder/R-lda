@@ -167,7 +167,7 @@ SEXP nubbi(SEXP documents,
   double* probs = (double*) R_alloc(max_choices, sizeof(double));
 
   for (ii = 0; ii < N; ++ii) {
-    Rprintf("Iteration %d\n", ii);
+    REprintf("Iteration %d\n", ii);
     for (dd = 0; dd < D; ++dd) {
       R_CheckUserInterrupt();
 
@@ -362,7 +362,7 @@ SEXP rtm(SEXP documents,
 
   for (ii = 0; ii < N; ++ii) {
     if (trace > 0) {
-      Rprintf("Iteration %d\n", ii);
+      REprintf("Iteration %d\n", ii);
     }
     for (dd = 0; dd < D; ++dd) {
       R_CheckUserInterrupt();
@@ -772,7 +772,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
   int iteration;
   for (iteration = 0; iteration < N; ++iteration) {
     if (trace >= 1) {
-      Rprintf("Iteration %d\n", iteration);
+      REprintf("Iteration %d\n", iteration);
     }
     for (dd = 0; dd < nd; ++dd) {
       R_CheckUserInterrupt();
@@ -986,13 +986,13 @@ SEXP collapsedGibbsSampler(SEXP documents,
                       change=REAL(beta)[kk + cn*K]/nws;
                       sumcn += exp(change - dv[dd+cn*nd]-maxExp);
                     }
-                  } 
+                  }
                     int yv = INTEGER(annotations)[dd]-1;
                     if (yv==-1) p[kk] *=exp(0-maxExp)/sumcn;
                     else {
                       change = REAL(beta)[kk + yv*K]/nws;
                       p[kk] *= exp(change-dv[dd + yv*nd]-maxExp)/sumcn;
-                    }             
+                    }
                 } else {
                   // How does this work?
                   // dv[dd] = y - sum_{i != n} beta_{z_i} / N
@@ -1022,7 +1022,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
                 var, nw, method, logistic), sumcn);
         } else if (p_sum==0) {
           for (kk = 0; kk < K; ++kk) p[kk]=1.0/K;
-          printf("Warning:Sum of probabilities is zero, assigning equal probabilities.\n");
+          REprintf("Warning:Sum of probabilities is zero, assigning equal probabilities.\n");
         }
 
 
@@ -1038,7 +1038,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
 
         if (*z == -1) {
           for (kk = 0; kk < K; ++kk) {
-            Rprintf("%g\n", p[kk]);
+            REprintf("%g\n", p[kk]);
           }
           error("This should not have happened (%g).", r);
         }
@@ -1093,8 +1093,8 @@ SEXP collapsedGibbsSampler(SEXP documents,
         topic_ll -= lgammafn(sum);
       }
       if (trace >= 2) {
-        Rprintf("ll: %g + %g - %g - %g = %g\n", doc_ll, topic_ll, const_ll, const_prior,
-            doc_ll + topic_ll - const_ll - const_prior);
+        REprintf("ll: %g + %g - %g - %g = %g\n", doc_ll, topic_ll, const_ll, const_prior,
+                 doc_ll + topic_ll - const_ll - const_prior);
       }
       REAL(log_likelihood)[2 * iteration] = doc_ll - const_prior + topic_ll - const_ll;
       REAL(log_likelihood)[2 * iteration + 1] = topic_ll - const_ll;
