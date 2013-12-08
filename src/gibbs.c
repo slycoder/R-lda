@@ -738,8 +738,8 @@ SEXP collapsedGibbsSampler(SEXP documents,
         error("Count must be positive.");
       }
       if (word >= V || word < 0) {
-        error("Word (%d) must be positive and less than or "
-            "equal to the number of words (%d).", word, V);
+        error("Word (%d) must be non-negative and less than "
+              "the number of words (%d).", word, V);
       }
       INTEGER(zs)[ww] = -1;
     }
