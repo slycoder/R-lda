@@ -48,7 +48,7 @@ qplot(predictions,
       alpha=I(0.5),
       geom="density") +
   geom_vline(aes(xintercept=0)) +
-  opts(legend.position = "none")
+  theme(legend.position = "none")
 
 predicted.docsums <- slda.predict.docsums(poliblog.documents,
                                           result$topics, 

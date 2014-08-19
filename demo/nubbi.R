@@ -33,7 +33,7 @@ qplot(x=nyt$names[nyt$pairs[pairs.to.keep,1] + 1],
       colour=as.factor(pair.topic[pairs.to.keep]),
       xlab = "",
       ylab = "") +
-  scale_colour("Relationship topic") +
+  scale_color_discrete("Relationship topic") +
   scale_size("Relationship strength") +
-  opts(axis.text.x = theme_text(angle=90, hjust=1))
+  theme(axis.text.x = element_text(angle=90, hjust=1))
 
