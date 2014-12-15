@@ -23,6 +23,7 @@ double dv_update(SEXP annotations, int dd,
   } else if (method == prodLDA) {
     error("Not implemented.");
   }
+  return 0;
 }
 
 #define CHECK(VAL, TYPE) if (!is##TYPE(VAL)) { \
