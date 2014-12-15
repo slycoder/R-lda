@@ -42,7 +42,7 @@ document.lengths(docs)
   the corpus.
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})
+  Jonathan Chang (\email{slycoder@gmail.com})
 }
 
 \seealso{

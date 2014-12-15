@@ -219,7 +219,7 @@ A fitted model as a list with the following components:
   2009.}
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})
+  Jonathan Chang (\email{slycoder@gmail.com})
 }
 \note{
   WARNING: This function does not compute precisely the correct thing

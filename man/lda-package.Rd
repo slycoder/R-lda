@@ -22,7 +22,7 @@ LazyLoad: \tab yes\cr
 }
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})
+  Jonathan Chang (\email{slycoder@gmail.com})
   Andrew Dai (\email{a.dai@ed.ac.uk})
 
   Special thanks to the following for their reports and comments:

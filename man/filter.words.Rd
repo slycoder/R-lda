@@ -45,7 +45,7 @@ shift.word.indices(documents, amount)
   input and output corpora is described in \code{\link{lda.collapsed.gibbs.sampler}}.
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})    
+  Jonathan Chang (\email{slycoder@gmail.com})    
 }
 \seealso{
   \code{\link{lda.collapsed.gibbs.sampler}} for the format of

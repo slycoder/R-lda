@@ -59,7 +59,7 @@ top.topic.documents(document_sums, num.documents = 20, alpha = 0.1)
   \cite{Blei, David M. and Ng, Andrew and Jordan, Michael. Latent Dirichlet allocation. Journal of Machine Learning Research, 2003.}
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})  
+  Jonathan Chang (\email{slycoder@gmail.com})  
 }
 
 \seealso{

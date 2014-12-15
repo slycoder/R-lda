@@ -63,7 +63,7 @@ lexicalize(doclines, sep = " ", lower = TRUE, count = 1L, vocab = NULL)
   \item{vocab}{A character vector of unique tokens occurring in the corpus.}
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})  
+  Jonathan Chang (\email{slycoder@gmail.com})  
 }
 \note{ Because of the limited tokenization and filtering capabilities of this
   function, it may not be useful in many cases.  This may be resolved

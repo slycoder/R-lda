@@ -97,7 +97,7 @@ nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual, K.pa
     KDD, 2009.}
 }
 \author{
-  Jonathan Chang (\email{jonchang@fb.com})      
+  Jonathan Chang (\email{slycoder@gmail.com})      
 }
 \note{
   The underlying sampler is quite general and could potentially be used
