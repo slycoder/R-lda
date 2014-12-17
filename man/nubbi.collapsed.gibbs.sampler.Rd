@@ -12,7 +12,8 @@
   description of both the entities and the relationships between them.
 }
 \usage{
-nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual, K.pair, vocab, num.iterations, alpha, eta, xi)
+nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual,
+                              K.pair, vocab, num.iterations, alpha, eta, xi)
 }
 \arguments{
   \item{contexts}{
@@ -35,18 +36,18 @@ nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual, K.pa
   A scalar integer representing the number of topics for the individual entities.
 }
 \item{K.pair}{
-  A scalar integer representing the number of topics for entity pairs.  
+  A scalar integer representing the number of topics for entity pairs.
 }
   \item{vocab}{
     A character vector specifying the vocabulary words associated with
-    the word indices used in \var{contexts} and \var{pair.contexts}. 
+    the word indices used in \var{contexts} and \var{pair.contexts}.
 }
   \item{num.iterations}{
     The number of sweeps of Gibbs sampling over the entire corpus to make.
 }
   \item{alpha}{
     The scalar value of the Dirichlet hyperparameter for
-    topic proportions. 
+    topic proportions.
 }
   \item{eta}{
     The scalar value of the Dirichlet hyperparamater for topic
@@ -75,7 +76,7 @@ nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual, K.pa
     \code{pair.contexts[[i]]} where each entry is either 0 if the
     sampler assigned the word to the first entity, 1 if the sampler
     assigned the word to the second entity, or 2 if the sampler assigned
-    the word to the relationship between the two.}x  
+    the word to the relationship between the two.}
   \item{document_source_sums}{A matrix with three columns and
     \code{length(pair.contexts)} rows where each row indicates how many
     words were assigned to the first entity of the pair, the second
@@ -97,7 +98,7 @@ nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual, K.pa
     KDD, 2009.}
 }
 \author{
-  Jonathan Chang (\email{slycoder@gmail.com})      
+  Jonathan Chang (\email{slycoder@gmail.com})
 }
 \note{
   The underlying sampler is quite general and could potentially be used
@@ -107,8 +108,8 @@ nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual, K.pa
 }
 \seealso{
   See \code{\link{lda.collapsed.gibbs.sampler}} for a description of the
-  input formats and similar models. 
-  
+  input formats and similar models.
+
   \code{\link{rtm.collapsed.gibbs.sampler}} is a different kind of
   model for document networks.
 }

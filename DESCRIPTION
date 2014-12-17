@@ -1,15 +1,15 @@
 Package: lda
 Type: Package
-Title: Collapsed Gibbs sampling methods for topic models.
+Title: Collapsed Gibbs sampling methods for topic models
 Version: 1.4.1
 Date: 2014-12-14
 Author: Jonathan Chang
 Maintainer: Jonathan Chang <slycoder@gmail.com>
-Description: This package implements latent Dirichlet allocation (LDA)
+Description: Implements latent Dirichlet allocation (LDA)
 	     and related models.  This includes (but is not limited
 	     to) sLDA, corrLDA, and the mixed-membership stochastic
 	     blockmodel.  Inference for all of these models is
-	     implemented via a fast collapsed Gibbs sampler writtten
+	     implemented via a fast collapsed Gibbs sampler written
 	     in C.  Utility functions for reading/writing data
 	     typically used in topic models, as well as tools for
 	     examining posterior distributions are also included.

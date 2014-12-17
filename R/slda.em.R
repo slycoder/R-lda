@@ -1,3 +1,9 @@
+if (getRversion() >= "2.15.1") {
+  # These are available in the suggested packages:
+  # penalized & nnet
+  utils::globalVariables(c("penalized", "multinom"));
+}
+
 slda.em <-
 function (documents, K, vocab, num.e.iterations, num.m.iterations,
     alpha, eta, annotations, params, variance, logistic = FALSE,

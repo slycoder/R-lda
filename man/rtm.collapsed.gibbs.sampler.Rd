@@ -14,7 +14,8 @@
 rtm.collapsed.gibbs.sampler(documents, links, K, vocab, num.iterations,
   alpha, eta, beta, trace = 0L, test.start = length(documents) + 1L)
 rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
-        alpha, eta, lambda = sum(sapply(links, length))/(length(links) * (length(links) -1)/2),
+        alpha, eta,
+        lambda = sum(sapply(links, length))/(length(links) * (length(links) -1)/2),
   initial.beta = rep(3, K), trace = 0L,
   test.start = length(documents) + 1L, tempering = 0.0)
 }
@@ -36,7 +37,7 @@ rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
 }
   \item{vocab}{
     A character vector specifying the vocabulary words associated with
-    the word indices used in \var{documents}. 
+    the word indices used in \var{documents}.
 }
   \item{num.iterations}{
     The number of sweeps of Gibbs sampling over the entire corpus to make.
@@ -49,7 +50,7 @@ rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
 }
   \item{alpha}{
     The scalar value of the Dirichlet hyperparameter for
-    topic proportions. 
+    topic proportions.
 }
   \item{eta}{
     The scalar value of the Dirichlet hyperparamater for topic
@@ -62,7 +63,7 @@ rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
 \item{lambda}{
   For \code{rtm.em}, the regularization parameter used when estimating
   beta.  \var{lambda} expresses the number of non-links to simulate
-  among all 
+  among all
   possible connections between documents.
 }
   \item{initial.beta}{
@@ -80,7 +81,7 @@ rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
     A numeric between 0 and 1 indicating how newly computed parameters should
     be averaged with the previous iterations parameters.  By default, the new
     values are used directly and the old value discarded.  When set to 1, the
-    new values are ignored and the initial values retained indefinitely. 
+    new values are ignored and the initial values retained indefinitely.
   }
 }
 \details{
@@ -108,7 +109,7 @@ rtm.em(documents, links, K, vocab, num.e.iterations, num.m.iterations,
   intelligence and statistics. 2009.}
 }
 \author{
-  Jonathan Chang (\email{slycoder@gmail.com})      
+  Jonathan Chang (\email{slycoder@gmail.com})
 }
 \seealso{
   See \code{\link{lda.collapsed.gibbs.sampler}} for a description of the
