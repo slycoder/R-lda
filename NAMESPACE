@@ -1,2 +1,3 @@
 exportPattern("^[^\\.]")
+importFrom("stats", "coef", "lm", "xtabs")
 useDynLib(lda)
