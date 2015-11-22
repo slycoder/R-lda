@@ -20,12 +20,10 @@ function (documents, K, vocab, num.e.iterations, num.m.iterations,
         if (logistic) {
             if (!(is.integer(annotations)) || sum(0:(length(unique(annotations))-1) %in% unique(annotations)) != length(unique(annotations)))
             stop("Annotations must be consecutive integers starting from zero when sLDA and logistic.")
-            library(nnet)
-            model.fit <- multinom(annotations ~ z.bar. + 0, family = multinom(),MaxNWts=MaxNWts, trace=trace)
+            model.fit <- nnet::multinom(annotations ~ z.bar. + 0, family = multinom(),MaxNWts=MaxNWts, trace=trace)
         }
         else if (regularise) {
-            library(penalized)
-            model.fit <- penalized(annotations ~ z.bar., unpenalized = ~0,
+            model.fit <- penalized::penalized(annotations ~ z.bar., unpenalized = ~0,
                 lambda2 = 1/lambda^2, trace = FALSE)
         }
         else {

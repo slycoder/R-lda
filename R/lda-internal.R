@@ -61,7 +61,6 @@ function (documents, K, vocab, num.iterations, alpha, eta, nbeta,
 .documents.as.Matrix <-
 function (docs, vocab)
 {
-    library(Matrix)
     ii <- rep(1:length(docs), times = sapply(docs, function(x) dim(x)[2]))
     both <- do.call(cbind, docs)
     condensed <- xtabs(both[2, ] ~ ii + both[1, ], sparse = TRUE)
