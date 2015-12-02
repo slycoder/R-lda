@@ -30,7 +30,8 @@ nubbi.collapsed.gibbs.sampler(contexts, pair.contexts, pairs, K.individual,
     and the same number of rows as \code{pair.contexts}.  The two
     elements in each row of \code{pairs} are 0-indexed indices into
     \code{contexts} indicating which two entities that element of
-    \code{pair.contexts} describes.
+    \code{pair.contexts} describes.  Note that this must be an \code{integer}
+    and not a \code{numeric} matrix.
   }
 \item{K.individual}{
   A scalar integer representing the number of topics for the individual entities.
