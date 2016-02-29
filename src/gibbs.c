@@ -931,7 +931,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
             *topic_wk -= count;
             *topic_k -= count;
           }
-          document_k = &INTEGER(document_sums)[K * dd + *z];
+          document_k = &INTEGER(document_sums)[(long)(K) * (long)(dd) + (long)(*z)];
           *document_k -= count;
 
           if (!isNull(annotations)) {
