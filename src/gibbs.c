@@ -623,9 +623,21 @@ SEXP collapsedGibbsSampler(SEXP documents,
   SEXP log_likelihood = NULL;
 
   SET_VECTOR_ELT(retval, 0, assignments = allocVector(VECSXP, nd));
+  if (!assignments) {
+    error("Unable to allocate memory for assignments vector");
+  }
   SET_VECTOR_ELT(retval, 1, topics = allocMatrix(INTSXP, K, V));
+  if (!topics) {
+    error("Unable to allocate memory for topic matrix");
+  }
   SET_VECTOR_ELT(retval, 2, topic_sums = allocMatrix(INTSXP, K, length(V_)));
+  if (!topic_sums) {
+    error("Unable to allocate memory for topic sums");
+  }
   SET_VECTOR_ELT(retval, 3, document_sums = allocMatrix(INTSXP, K, nd));
+  if (!document_sums) {
+    error("Unable to allocate memory for document sums");
+  }
 
   CHECKLEN(compute_log_likelihood_, Logical, 1);
   int compute_log_likelihood = LOGICAL(compute_log_likelihood_)[0];
@@ -731,6 +743,9 @@ SEXP collapsedGibbsSampler(SEXP documents,
     int nw = INTEGER(GET_DIM(document))[1];
     SET_VECTOR_ELT(assignments, dd, allocVector(INTSXP, nw));
     SEXP zs = VECTOR_ELT(assignments, dd);
+    if (!zs) {
+      error("Unable to allocate memory for document (%d) assignments", dd);
+    }
 
     for (ww = 0; ww < nw; ++ww) {
       int word = INTEGER(document)[ww * 2];
