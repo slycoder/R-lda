@@ -904,14 +904,14 @@ SEXP collapsedGibbsSampler(SEXP documents,
 
       for (ww = 0; ww < nw; ++ww) {
         int* z = &INTEGER(zs)[ww];
-        int word = -1;
+        long word = -1;
         int count = 1;
         int* topic_wk;
         int* topic_k;
         int* document_k;
 
         word = INTEGER(document)[ww * 2];
-        int partialsum = 0;
+        long partialsum = 0;
         int topic_index = -1;
         for (ii = 0; ii < length(V_); ++ii) {
           partialsum += INTEGER(V_)[ii];
@@ -953,7 +953,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
           }
 
           if (*topic_wk < 0 || *topic_k < 0 || *document_k < 0) {
-            error("Counts became negative for word (%d): (%d, %d, %d)",
+            error("Counts became negative for word (%ld): (%d, %d, %d)",
                 word, *topic_wk, *topic_k, *document_k);
           }
         }
