@@ -493,7 +493,8 @@ SEXP collapsedGibbsSampler(SEXP documents,
     SEXP trace_,
     SEXP freeze_topics_) {
   GetRNGstate();
-  int dd;
+  // This is a long so that dd * K does not overflow
+  long dd;
   int ii;
   int kk;
   double var = 0;
@@ -931,7 +932,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
             *topic_wk -= count;
             *topic_k -= count;
           }
-          document_k = &INTEGER(document_sums)[(long)(K) * (long)(dd) + (long)(*z)];
+          document_k = &INTEGER(document_sums)[K * dd + *z];
           *document_k -= count;
 
           if (!isNull(annotations)) {
