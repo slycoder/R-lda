@@ -165,7 +165,7 @@ A fitted model as a list with the following components:
     total number of times words were assigned to each topic.}
   \item{document_sums}{A \eqn{K \times D} matrix where each entry is an
     integer indicating the number of times words in each document
-    (column) were assigned to each topic (column).}
+    (column) were assigned to each topic (row).}
   \item{log.likelihoods}{Only for \code{lda.collapsed.gibbs.sampler}.  A
     matrix with 2 rows and \code{num.iterations} columns of log likelihoods when the flag
     \code{compute.log.likelihood} is set to \code{TRUE}.  The first row
