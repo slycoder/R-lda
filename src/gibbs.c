@@ -8,8 +8,8 @@
 #define prodLDA 3
 
 double dv_update(SEXP annotations, int dd,
-		 double beta_z, double var,
-		 int nw, int method, int logistic) {
+  double beta_z, double var,
+  int nw, int method, int logistic) {
   if (method == sLDA) {
     return beta_z / nw;
   } else if (method == corrLDA) {

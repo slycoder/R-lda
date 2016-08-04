@@ -19,7 +19,7 @@ links.as.edgelist(links)
 }
 \value{
   A two-column matrix where each row represents an edge.   Note that the
-  indices in this matrix are 1-indexed rather than 0-indexed.
+  indices in this matrix are 0-indexed.
 }
 \author{
   Jonathan Chang (\email{slycoder@gmail.com})
@@ -52,11 +52,11 @@ links
 
 links.as.edgelist(links)
 ##      [,1] [,2]
-## [1,]    1  485
-## [2,]    1  390
-## [3,]    4  178
-## [4,]    4  417
-## [5,]    4  534
-## [6,]    5  154
+## [1,]    0  484
+## [2,]    0  389
+## [3,]    3  177
+## [4,]    3  416
+## [5,]    3  533
+## [6,]    4  153
 }
 \keyword{ utilities }
