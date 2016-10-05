@@ -902,6 +902,11 @@ SEXP collapsedGibbsSampler(SEXP documents,
         }
       }
 
+      int* topics_p = INTEGER(topics);
+      int* topic_sums_p = INTEGER(topic_sums);
+      int* document_sums_p = INTEGER(document_sums);
+      int has_annotations = !isNull(annotations);
+
       for (ww = 0; ww < nw; ++ww) {
         int* z = &INTEGER(zs)[ww];
         long word = -1;
@@ -925,17 +930,17 @@ SEXP collapsedGibbsSampler(SEXP documents,
         count = INTEGER(document)[ww * 2 + 1];
 
         if (*z != -1) {
-          topic_wk = &INTEGER(topics)[(*z) + K * word];
-          topic_k = &INTEGER(topic_sums)[*z + K * topic_index];
+          topic_wk = &topics_p[(*z) + K * word];
+          topic_k = &topic_sums_p[*z + K * topic_index];
           if(!freeze_topics)
           {
             *topic_wk -= count;
             *topic_k -= count;
           }
-          document_k = &INTEGER(document_sums)[K * dd + *z];
+          document_k = &document_sums_p[K * dd + *z];
           *document_k -= count;
 
-          if (!isNull(annotations)) {
+          if (has_annotations) {
             if (method == prodLDA) {
               wx2[*z] -= count * REAL(annotations)[dd] * REAL(annotations)[dd];
               wx[*z] -= count * REAL(annotations)[dd];
@@ -976,11 +981,11 @@ SEXP collapsedGibbsSampler(SEXP documents,
             }
           } else {
 
-            p[kk] = (INTEGER(document_sums)[K * dd + kk] + alpha);
-            p[kk] *= (INTEGER(topics)[kk + K * word] + eta);
-            p[kk] /= (INTEGER(topic_sums)[kk + K * topic_index] + V * eta);
+            p[kk] = (document_sums_p[K * dd + kk] + alpha);
+            p[kk] *= (topics_p[kk + K * word] + eta);
+            p[kk] /= (topic_sums_p[kk + K * topic_index] + V * eta);
 
-            if (!isNull(annotations)) {
+            if (has_annotations) {
               if (method == corrLDA) {
                 p[kk] *= dv_update(annotations, dd, REAL(beta)[kk],var, nw, method, logistic) - dv[dd];
               } else if (method == sLDA) {
@@ -1021,7 +1026,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
                 }
               } else if (method == prodLDA) {
                 double x_d = REAL(annotations)[dd];
-                int n_k = INTEGER(topic_sums)[kk + K * topic_index] + 1 + lambda;
+                int n_k = topic_sums_p[kk + K * topic_index] + 1 + lambda;
                 p[kk] *= sqrt(n_k) *
                   exp(-(wx2[kk] - wx2[0] - (wx[kk] + x_d)*(wx[kk] + x_d)/n_k + (wx[0] + x_d) * (wx[0] + x_d) / n_k) / (2 * var));
               } else {
@@ -1062,15 +1067,15 @@ SEXP collapsedGibbsSampler(SEXP documents,
 
         if(!freeze_topics)
         {
-          INTEGER(topics)[*z + K * word] += count;
-          INTEGER(topic_sums)[*z + K * topic_index] += count;
+          topics_p[*z + K * word] += count;
+          topic_sums_p[*z + K * topic_index] += count;
         }
-        INTEGER(document_sums)[K * dd + *z] += count;
+        document_sums_p[K * dd + *z] += count;
         if (burnin > -1 && iteration >= burnin) {
           INTEGER(document_expects)[K * dd + *z] += count;
         }
 
-        if (!isNull(annotations)) {
+        if (has_annotations) {
           if (method == prodLDA) {
             wx2[*z] += count * REAL(annotations)[dd] * REAL(annotations)[dd];
             wx[*z] += count * REAL(annotations)[dd];

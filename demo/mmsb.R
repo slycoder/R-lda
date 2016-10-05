@@ -29,8 +29,8 @@ angle.diffs <- tapply(angles, as.factor(angles), function(x) {
 angles[order(angles)] <- unlist(angle.diffs)
 
 plot.1 <- ggplot(data = memberships) +
-  geom_segment(aes(x = c(0, 0, 1),  y = c(0, 1, 0),
-                   xend = c(0, 1, 0), yend = c(1, 0, 0))) +
+  annotate("segment", x = c(0, 0, 1),  y = c(0, 1, 0),
+                   xend = c(0, 1, 0), yend = c(1, 0, 0)) +
   geom_point(aes(x = theta.1, y = theta.3, color = colors)) +
   scale_colour_manual(values = structure(memberships$colors, names = memberships$colors)) +
   scale_x_continuous(breaks=seq(0, 1, length.out=5),
@@ -38,14 +38,14 @@ plot.1 <- ggplot(data = memberships) +
   scale_y_continuous(breaks=seq(0, 1, length.out=5),
                      limits = c(-0.25, 1.25)) +
   geom_text(aes(x=theta.1, y=theta.3, label=name, colour = colors,
-                angle=angles * 180 / pi), 
+                angle=angles * 180 / pi),
             data = memberships,
             size=2, hjust=-0.5) +
   ggtitle("Latent positions") +
   xlab(expression(theta[1])) +
   ylab(expression(theta[3])) +
   theme(panel.grid.minor = element_blank(), legend.position = "none")
-                   
+
   ## Block relations plot
 ratio <- with(result, blocks.pos / (blocks.pos + blocks.neg))
 total <- with(result, blocks.pos + blocks.neg)
