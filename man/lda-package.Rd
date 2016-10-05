@@ -15,8 +15,8 @@
 \tabular{ll}{
 Package: \tab lda\cr
 Type: \tab Package\cr
-Version: \tab 1.3.2\cr
-Date: \tab 2012-05-22\cr
+Version: \tab 1.5\cr
+Date: \tab 2016-10-04\cr
 License: \tab BSD \cr
 LazyLoad: \tab yes\cr
 }
@@ -33,7 +33,8 @@ LazyLoad: \tab yes\cr
   Khalid El-Arini,
   Roger Levy,
   Solomon Messing,
-  Joerg Reichardt 
+  Joerg Reichardt,
+  Dmitriy Selivanov
 }
 \references{
   \cite{Blei, David M. and Ng, Andrew and Jordan, Michael. Latent Dirichlet allocation. Journal of Machine Learning Research, 2003.}
