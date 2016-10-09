@@ -905,21 +905,25 @@ SEXP collapsedGibbsSampler(SEXP documents,
       int* topics_p = INTEGER(topics);
       int* topic_sums_p = INTEGER(topic_sums);
       int* document_sums_p = INTEGER(document_sums);
+      int* document_p = INTEGER(document);
+      int* V_p = INTEGER(V_);
+      int V_l = length(V_);
       int has_annotations = !isNull(annotations);
+      int* zs_p = INTEGER(zs);
 
       for (ww = 0; ww < nw; ++ww) {
-        int* z = &INTEGER(zs)[ww];
+        int* z = &zs_p[ww];
         long word = -1;
         int count = 1;
         int* topic_wk;
         int* topic_k;
         int* document_k;
 
-        word = INTEGER(document)[ww * 2];
+        word = document_p[ww * 2];
         long partialsum = 0;
         int topic_index = -1;
-        for (ii = 0; ii < length(V_); ++ii) {
-          partialsum += INTEGER(V_)[ii];
+        for (ii = 0; ii < V_l; ++ii) {
+          partialsum += V_p[ii];
           if (word < partialsum) {
             topic_index = ii;
           }
@@ -927,7 +931,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
         if (topic_index == -1) {
           error("Oops I did it again");
         }
-        count = INTEGER(document)[ww * 2 + 1];
+        count = document_p[ww * 2 + 1];
 
         if (*z != -1) {
           topic_wk = &topics_p[(*z) + K * word];
@@ -967,8 +971,8 @@ SEXP collapsedGibbsSampler(SEXP documents,
         double p_sum = 0.0;
 
         double sumcn;
-        for (kk = 0; kk < K; ++kk) {
-          if (*z == -1) {
+        if (*z == -1) {
+          for (kk = 0; kk < K; ++kk) {
             if (initial != NULL) {
               if (INTEGER(initial_d)[ww] == kk) {
                 p[kk] = 1;
@@ -979,8 +983,10 @@ SEXP collapsedGibbsSampler(SEXP documents,
             } else {
               p[kk] = 1;
             }
-          } else {
-
+            p_sum += p[kk];
+          }
+        } else {
+          for (kk = 0; kk < K; ++kk) {
             p[kk] = (document_sums_p[K * dd + kk] + alpha);
             p[kk] *= (topics_p[kk + K * word] + eta);
             p[kk] /= (topic_sums_p[kk + K * topic_index] + V * eta);
@@ -1033,8 +1039,8 @@ SEXP collapsedGibbsSampler(SEXP documents,
                 error("Not implemented.");
               }
             }
+            p_sum += p[kk];
           }
-          p_sum += p[kk];
         }
 
         if (p_sum < 0.0) {
@@ -1046,8 +1052,6 @@ SEXP collapsedGibbsSampler(SEXP documents,
           for (kk = 0; kk < K; ++kk) p[kk]=1.0/K;
           REprintf("Warning:Sum of probabilities is zero, assigning equal probabilities.\n");
         }
-
-
 
         *z = -1;
         for (kk = 0; kk < K; ++kk) {
