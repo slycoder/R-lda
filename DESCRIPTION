@@ -16,4 +16,4 @@ Description: Implements latent Dirichlet allocation (LDA)
 License: LGPL
 LazyLoad: yes
 Suggests: Matrix, reshape2, ggplot2 (>= 2.1.0), penalized, nnet
-BugReports: https://github.com/slycoder/R-lda-deprecated/issues
+BugReports: https://github.com/slycoder/R-lda/issues
