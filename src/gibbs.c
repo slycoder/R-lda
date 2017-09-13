@@ -31,7 +31,7 @@ double dv_update(SEXP annotations, int dd,
   }
 
 #define CHECKLEN(VAL, TYPE, LEN) if (!is##TYPE(VAL) || length(VAL) != LEN) { \
-    error(#VAL " must be a length " #LEN " " #TYPE "."); \
+    error(#VAL " -- must be a length -- " #LEN " " #TYPE "."); \
   }
 
 #define CHECKMATROW(VAL, TYPE, NROW) if (!isMatrix(VAL) || !is##TYPE(VAL) || NUMROWS(VAL) != NROW) { \
@@ -100,6 +100,7 @@ SEXP nubbi(SEXP documents,
   SEXP topic_sums;
   SEXP document_sums;
   SEXP document_source_sums;
+  SEXP srecko_test;
 
   SEXP retval;
   PROTECT(retval = allocVector(VECSXP, 6));
@@ -619,6 +620,8 @@ SEXP collapsedGibbsSampler(SEXP documents,
   SEXP document_expects = NULL;
   SEXP document_sums;
   SEXP initial = NULL;
+  SEXP initial_net_left = NULL;
+  SEXP initial_net_right = NULL;
   SEXP initial_topic_sums = NULL;
   SEXP initial_topics = NULL;
   SEXP log_likelihood = NULL;
@@ -666,8 +669,11 @@ SEXP collapsedGibbsSampler(SEXP documents,
 
     for (ii = 0; ii < length(initial_); ++ii) {
       if (!strcmp(CHAR(STRING_ELT(names, ii)), "assignments")) {
-        initial = VECTOR_ELT(initial_, ii);
-        CHECKLEN(initial, NewList, nd);
+    	  // srecko commented this
+    	  //initial = VECTOR_ELT(initial_, ii);
+
+    	  //CHECKLEN(initial, NewList, nd);
+
       } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "topic_sums")) {
         initial_topic_sums = VECTOR_ELT(initial_, ii);
         if (!isInteger(initial_topic_sums) ||
@@ -675,6 +681,10 @@ SEXP collapsedGibbsSampler(SEXP documents,
             INTEGER(GET_DIM(initial_topic_sums))[1] != length(V_)) {
           error("Initial topic sums must be a K x length(V) integer matrix.");
         }
+      } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "net.assignments.left")) {
+    	  initial_net_left = VECTOR_ELT(initial_, ii);
+      } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "net.assignments.right")) {
+    	  initial_net_right = VECTOR_ELT(initial_, ii);
       } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "topics")) {
         initial_topics = VECTOR_ELT(initial_, ii);
         if (!isInteger(initial_topics) ||
@@ -838,7 +848,17 @@ SEXP collapsedGibbsSampler(SEXP documents,
           for (ii = 0; ii < K; ++ii) {
             for (jj = 0; jj < K; ++jj) {
               if (*z == -1) {
-                p_pair[ii * K + jj] = 1.0;
+            	if (initial_net_left != NULL && initial_net_right != NULL){
+					if ((ii == INTEGER(initial_net_left)[nd * dd + ww]) && (jj == INTEGER(initial_net_right)[nd * dd + ww])){
+						//REprintf("Not null!!!!! %d\n", INTEGER(initial_net_left)[nd * dd + ww]);
+						p_pair[ii * K + jj] = 1.0;
+					} else {
+						p_pair[ii * K + jj] = 0.0;
+					}
+            	} else {
+            		p_pair[ii * K + jj] = 1.0;
+            	}
+
               } else {
                 p_pair[ii * K + jj] = (INTEGER(document_sums)[K * dd + ii] + alpha)*
                   (INTEGER(document_sums)[K * ww + jj] + alpha);
@@ -1132,4 +1152,5 @@ SEXP collapsedGibbsSampler(SEXP documents,
   UNPROTECT(1);
   return retval;
 }
+
 
