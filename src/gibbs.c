@@ -100,7 +100,6 @@ SEXP nubbi(SEXP documents,
   SEXP topic_sums;
   SEXP document_sums;
   SEXP document_source_sums;
-  SEXP srecko_test;
 
   SEXP retval;
   PROTECT(retval = allocVector(VECSXP, 6));
@@ -668,11 +667,9 @@ SEXP collapsedGibbsSampler(SEXP documents,
     SEXP names = getAttrib(initial_, R_NamesSymbol);
 
     for (ii = 0; ii < length(initial_); ++ii) {
-      if (!strcmp(CHAR(STRING_ELT(names, ii)), "assignments")) {
-    	  // srecko commented this
-    	  //initial = VECTOR_ELT(initial_, ii);
-
-    	  //CHECKLEN(initial, NewList, nd);
+      if (!strcmp(CHAR(STRING_ELT(names, ii)), "assignments")) {    	  
+    	  initial = VECTOR_ELT(initial_, ii);
+    	  CHECKLEN(initial, NewList, nd);
 
       } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "topic_sums")) {
         initial_topic_sums = VECTOR_ELT(initial_, ii);
