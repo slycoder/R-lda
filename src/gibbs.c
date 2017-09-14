@@ -667,10 +667,9 @@ SEXP collapsedGibbsSampler(SEXP documents,
     SEXP names = getAttrib(initial_, R_NamesSymbol);
 
     for (ii = 0; ii < length(initial_); ++ii) {
-      if (!strcmp(CHAR(STRING_ELT(names, ii)), "assignments")) {    	  
-    	  initial = VECTOR_ELT(initial_, ii);
-    	  CHECKLEN(initial, NewList, nd);
-
+      if (!strcmp(CHAR(STRING_ELT(names, ii)), "assignments")) {
+        initial = VECTOR_ELT(initial_, ii);
+        CHECKLEN(initial, NewList, nd);
       } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "topic_sums")) {
         initial_topic_sums = VECTOR_ELT(initial_, ii);
         if (!isInteger(initial_topic_sums) ||
@@ -679,9 +678,9 @@ SEXP collapsedGibbsSampler(SEXP documents,
           error("Initial topic sums must be a K x length(V) integer matrix.");
         }
       } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "net.assignments.left")) {
-    	  initial_net_left = VECTOR_ELT(initial_, ii);
+        initial_net_left = VECTOR_ELT(initial_, ii);
       } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "net.assignments.right")) {
-    	  initial_net_right = VECTOR_ELT(initial_, ii);
+        initial_net_right = VECTOR_ELT(initial_, ii);
       } else if (!strcmp(CHAR(STRING_ELT(names, ii)), "topics")) {
         initial_topics = VECTOR_ELT(initial_, ii);
         if (!isInteger(initial_topics) ||
@@ -763,7 +762,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
       }
       if (word >= V || word < 0) {
         error("Word (%d) must be non-negative and less than "
-              "the number of words (%d).", word, V);
+            "the number of words (%d).", word, V);
       }
       INTEGER(zs)[ww] = -1;
     }
@@ -845,16 +844,16 @@ SEXP collapsedGibbsSampler(SEXP documents,
           for (ii = 0; ii < K; ++ii) {
             for (jj = 0; jj < K; ++jj) {
               if (*z == -1) {
-            	if (initial_net_left != NULL && initial_net_right != NULL){
-					if ((ii == INTEGER(initial_net_left)[nd * dd + ww]) && (jj == INTEGER(initial_net_right)[nd * dd + ww])){
-						//REprintf("Not null!!!!! %d\n", INTEGER(initial_net_left)[nd * dd + ww]);
-						p_pair[ii * K + jj] = 1.0;
-					} else {
-						p_pair[ii * K + jj] = 0.0;
-					}
-            	} else {
-            		p_pair[ii * K + jj] = 1.0;
-            	}
+                if (initial_net_left != NULL && initial_net_right != NULL){
+                  if ((ii == INTEGER(initial_net_left)[nd * dd + ww]) && (jj == INTEGER(initial_net_right)[nd * dd + ww])){
+                    //REprintf("Not null!!!!! %d\n", INTEGER(initial_net_left)[nd * dd + ww]);
+                    p_pair[ii * K + jj] = 1.0;
+                  } else {
+                    p_pair[ii * K + jj] = 0.0;
+                  }
+                } else {
+                  p_pair[ii * K + jj] = 1.0;
+                }
 
               } else {
                 p_pair[ii * K + jj] = (INTEGER(document_sums)[K * dd + ii] + alpha)*
@@ -1032,12 +1031,12 @@ SEXP collapsedGibbsSampler(SEXP documents,
                       sumcn += exp(change - dv[dd+cn*nd]-maxExp);
                     }
                   }
-                    int yv = INTEGER(annotations)[dd]-1;
-                    if (yv==-1) p[kk] *=exp(0-maxExp)/sumcn;
-                    else {
-                      change = REAL(beta)[kk + yv*K]/nws;
-                      p[kk] *= exp(change-dv[dd + yv*nd]-maxExp)/sumcn;
-                    }
+                  int yv = INTEGER(annotations)[dd]-1;
+                  if (yv==-1) p[kk] *=exp(0-maxExp)/sumcn;
+                  else {
+                    change = REAL(beta)[kk + yv*K]/nws;
+                    p[kk] *= exp(change-dv[dd + yv*nd]-maxExp)/sumcn;
+                  }
                 } else {
                   // How does this work?
                   // dv[dd] = y - sum_{i != n} beta_{z_i} / N
@@ -1137,7 +1136,7 @@ SEXP collapsedGibbsSampler(SEXP documents,
       }
       if (trace >= 2) {
         REprintf("ll: %g + %g - %g - %g = %g\n", doc_ll, topic_ll, const_ll, const_prior,
-                 doc_ll + topic_ll - const_ll - const_prior);
+            doc_ll + topic_ll - const_ll - const_prior);
       }
       REAL(log_likelihood)[2 * iteration] = doc_ll - const_prior + topic_ll - const_ll;
       REAL(log_likelihood)[2 * iteration + 1] = topic_ll - const_ll;
@@ -1149,5 +1148,3 @@ SEXP collapsedGibbsSampler(SEXP documents,
   UNPROTECT(1);
   return retval;
 }
-
-
