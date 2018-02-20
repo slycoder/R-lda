@@ -36,7 +36,7 @@ qplot(Topics, Estimate, colour=Estimate, size=abs(t.value), data=coefs) +
                   ymax=Estimate+Std..Error)) + coord_flip()
 
 predictions <- slda.predict(poliblog.documents,
-                            result$topics, 
+                            result$topics,
                             result$model,
                             alpha = 1.0,
                             eta=0.1)
@@ -51,12 +51,12 @@ qplot(predictions,
   theme(legend.position = "none")
 
 predicted.docsums <- slda.predict.docsums(poliblog.documents,
-                                          result$topics, 
+                                          result$topics,
                                           alpha = 1.0,
                                           eta=0.1)
 predicted.proportions <- t(predicted.docsums) / colSums(predicted.docsums)
 
-qplot(`Topic 1`, `Topic 2`, 
-      data = structure(data.frame(predicted.proportions), 
-                       names = paste("Topic", 1:10)), 
+qplot(`Topic 1`, `Topic 2`,
+      data = structure(data.frame(predicted.proportions),
+                       names = paste("Topic", 1:10)),
       size = `Topic 3`)

@@ -77,7 +77,6 @@ SEXP cvb0(
 
     int nw = INTEGER(GET_DIM(document))[1];
     SET_VECTOR_ELT(assignments, dd, allocMatrix(REALSXP, K, nw));
-    SEXP zs = VECTOR_ELT(assignments, dd);
 
     for (ww = 0; ww < nw; ++ww) {
       int word = INTEGER(document)[ww * 2];
