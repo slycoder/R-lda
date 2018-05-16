@@ -61,10 +61,10 @@ read.vocab(filename = "vocab.dat")
   \code{\link{lda.collapsed.gibbs.sampler}} for details.
 
   \code{read.vocab} returns a character vector of strings corresponding to
-  features. 
+  features.
 }
 \references{
-  \cite{Blei, David M.  Latent Dirichlet Allocation in C. \url{http://www.cs.princeton.edu/~blei/lda-c/index.html}}
+  \cite{Blei, David M.  Latent Dirichlet Allocation in C. \url{http://www.cs.columbia.edu/~blei/topicmodeling_software.html}}
 }
 \author{
   Jonathan Chang (\email{slycoder@gmail.com})

@@ -1,3 +1,10 @@
-exportPattern("^[^\\.]")
+export("concatenate.documents", "document.lengths", "filter.words",
+       "lda.collapsed.gibbs.sampler", "lda.cvb0", "lexicalize",
+       "links.as.edgelist", "mmsb.collapsed.gibbs.sampler",
+       "nubbi.collapsed.gibbs.sampler", "predictive.distribution",
+       "predictive.link.probability", "read.documents", "read.vocab",
+       "rtm.collapsed.gibbs.sampler", "rtm.em", "shift.word.indices",
+       "slda.em", "slda.predict", "slda.predict.docsums",
+       "top.topic.documents", "top.topic.words", "word.counts")
 importFrom("stats", "coef", "lm", "xtabs")
-useDynLib(lda)
+useDynLib(lda, .registration = TRUE)

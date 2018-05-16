@@ -1,8 +1,8 @@
 Package: lda
 Type: Package
 Title: Collapsed Gibbs Sampling Methods for Topic Models
-Version: 1.5
-Date: 2016-10-04
+Version: 1.5.1
+Date: 2018-05-16
 Author: Jonathan Chang
 Maintainer: Jonathan Chang <slycoder@gmail.com>
 Description: Implements latent Dirichlet allocation (LDA)

@@ -1,35 +1,30 @@
 \name{lda-package}
-\Rdversion{1.1}
 \alias{lda-package}
 \alias{lda}
 \docType{package}
 \title{
-  Collapsed Gibbs Samplers and Related Utility Functions for LDA-type Models
+\packageTitle{lda}
 }
 \description{
-  This package contains functions to read in text corpora, fit
-  LDA-type models to them, and use the fitted models to explore the data
-  and make predictions.
+\packageDescription{lda}
 }
 \details{
-\tabular{ll}{
-Package: \tab lda\cr
-Type: \tab Package\cr
-Version: \tab 1.5\cr
-Date: \tab 2016-10-04\cr
-License: \tab BSD \cr
-LazyLoad: \tab yes\cr
-}
+
+The DESCRIPTION file:
+\packageDESCRIPTION{lda}
+\packageIndices{lda}
 }
 \author{
-  Jonathan Chang (\email{slycoder@gmail.com})
-  Andrew Dai (\email{a.dai@ed.ac.uk})
+  \packageAuthor{lda}
+
+  Maintainer: \packageMaintainer{lda}
 
   Special thanks to the following for their reports and comments:
   Edo Airoldi,
   Jordan Boyd-Graber,
   Christopher E. Cramer,
-	James Danowski,
+  Andrew Dai,
+  James Danowski,
   Khalid El-Arini,
   Roger Levy,
   Solomon Messing,
