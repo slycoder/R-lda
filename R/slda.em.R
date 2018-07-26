@@ -7,7 +7,7 @@ if (getRversion() >= "2.15.1") {
 slda.em <-
 function (documents, K, vocab, num.e.iterations, num.m.iterations,
     alpha, eta, annotations, params, variance, logistic = FALSE,
-    lambda = 10, regularise = FALSE, method = "sLDA", trace = 0L, MaxNWts=3000)
+    lambda = 10, regularise = FALSE, method = "sLDA", trace = 0L, MaxNWts=3000, initial = NULL)
 {
     if (K > length(documents) && !regularise) {
         stop("K must be less than or equal to the length of documents.")
@@ -37,7 +37,7 @@ function (documents, K, vocab, num.e.iterations, num.m.iterations,
     num.e.iterations <- rep(num.e.iterations, length.out = num.m.iterations)
     result <- .slda.collapsed.gibbs.sampler(documents, K, vocab,
         num.e.iterations[1], alpha, eta, annotations, params,
-        variance[1], logistic, method[1], lambda = lambda, trace = trace)
+        variance[1], logistic, method[1], lambda = lambda, trace = trace, initial = initial)
     fit <- estimate.params(result$document_sums, K, logistic,MaxNWts)
     params <- fit$coefs
     for (ii in seq(length.out = num.m.iterations - 1)) {
